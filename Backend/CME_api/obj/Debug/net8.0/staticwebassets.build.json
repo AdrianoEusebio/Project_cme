@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "8M8UYIfoFBHqjaTAFM3JkaTworbEKOc2EqqNfeaU6Q0=",
+  "Source": "CME_api",
+  "BasePath": "_content/CME_api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

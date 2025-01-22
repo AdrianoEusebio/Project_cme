@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\CME_api.props" />
+</Project>

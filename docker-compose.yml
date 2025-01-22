@@ -1,0 +1,38 @@
+services:
+  Database:
+    image: postgres:latest
+    container_name: Database
+    restart: always
+    environment:
+      POSTGRES_DB: cme_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5   
+
+  Backend:
+    image: ${DOCKER_REGISTRY-}backend
+    container_name: Backend
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ConectionsStrings:Host=Database;Database=cme_db;Username=postgres;Password=postgres
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8000
+    depends_on:
+      Database:
+        condition: service_healthy
+    volumes:
+      - .:/Backend   
+     
+volumes:
+  postgres_data:
