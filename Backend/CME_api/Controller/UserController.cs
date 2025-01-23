@@ -11,18 +11,9 @@ public class UserController: ControllerBase
         _context = context;
     }
 
-    [HttpGet]
+    [HttpGet ("{id}")]
     public async Task<ActionResult<IEnumerable<User>>> GetUsers()
     {
         return await _context.Users.ToListAsync();
-    }
-
-    [HttpPost]
-    public async Task<ActionResult<User>> PostUser(User user)
-    {
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction("GetUser", new { id = user.id_user }, user);
     }
 }

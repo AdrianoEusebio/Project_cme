@@ -1,22 +1,35 @@
-
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class User{
+public class User
+{
     [Key]
-    [Column("dataAtual")]
-    public int id_user { get; set; }
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
 
-    [Column("name")]
-    public string? name { get; set; }
-    [Column("email")]
-    public string? email { get; set; }
-
-    [ForeignKey("group")]
-    public User_Group? group { get; set; }
-    [Column("hashPassword")]
-    public string? hashPassword { get; set; }
-    [Column("id_user")]
+    [Required]
+    [MaxLength(50)]
+    public string Username { get; set; } = string.Empty;
     
-    public DateTime dataAtual { get; set; }
+    [Required]
+    public string HashPassword { get; set; } = string.Empty;
+
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; } = string.Empty;
+    public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
+    
+    [ForeignKey(nameof(UserGroup))]
+    public int IdGroup { get; set; }
+
+    public UserGroup UserGroup { get; set; } = null!;
+    public string GenerateHashPassword(string password)
+    {
+        return BCrypt.Net.BCrypt.HashPassword(password);
+    }
+
+    public bool VerifyPassword(string password, string hashedPassword)
+    {
+        return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+    }
 }
