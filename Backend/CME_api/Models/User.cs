@@ -1,9 +1,22 @@
 
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 public class User{
-    private string? name { get; set; }
-    private string? email { get; set; }
-     private User_Group? group { get; set; }
-    private string? hashPassword { get; set; }
-    private int id_user { get; set; }
-    private DateTime dataAtual { get; set; }
+    [Key]
+    [Column("dataAtual")]
+    public int id_user { get; set; }
+
+    [Column("name")]
+    public string? name { get; set; }
+    [Column("email")]
+    public string? email { get; set; }
+
+    [ForeignKey("group")]
+    public User_Group? group { get; set; }
+    [Column("hashPassword")]
+    public string? hashPassword { get; set; }
+    [Column("id_user")]
+    
+    public DateTime dataAtual { get; set; }
 }
