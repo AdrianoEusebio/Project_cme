@@ -25,16 +25,21 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      target: dev
     ports:
       - "8000:8000"
     environment:
-      - ConnectionStrings__DefaultConnection=Host=Database;Port=5432;Database=cme_db;Username=postgres;Password=cme12345
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
       - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=Database;Port=5432;Database=cme_db;Username=postgres;Password=cme12345
       - ASPNETCORE_URLS=http://+:8000
     depends_on:
       Database:
         condition: service_healthy
-    command: dotnet CME_api.dll
+    command: dotnet watch run --no-launch-profile --no-hot-restart
+    volumes:
+      - ./Backend/CME_api:/app
+      - ~/.nuget/packages:/root/.nuget/packages
      
 volumes:
   postgres_data:

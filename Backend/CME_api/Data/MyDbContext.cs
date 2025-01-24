@@ -4,15 +4,12 @@ public class MyDbContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<UserGroup> UserGroups { get; set; }
+    public DbSet<Materials> Materials { get; set; }
     public MyDbContext(DbContextOptions<MyDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<User>()
-            .Property(u => u.Id)
-            .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<UserGroup>()
             .Property(ug => ug.Id)
@@ -23,6 +20,12 @@ public class MyDbContext : DbContext
             .WithMany(g => g.Users)
             .HasForeignKey(u => u.IdGroup)
             .HasConstraintName("FK_Users_UserGroups_IdGroup");
+
+        modelBuilder.Entity<Materials>()
+            .Property(m => m.Status)
+            .HasConversion<string>();
     }
+
+    
 
 }

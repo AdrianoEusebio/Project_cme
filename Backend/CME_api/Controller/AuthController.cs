@@ -19,29 +19,6 @@ public class AuthController : ControllerBase
         _context = context;
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
-    {
-        if (await _context.Users.AnyAsync(u => u.Username == request.Username))
-            return BadRequest(new { message = "Username já está em uso!" });
-
-        string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.HashPassword); // Criptografando a senha
-
-        var user = new User
-        {
-            Username = request.Username,
-            HashPassword = passwordHash,
-            Email = request.Email,
-            IdGroup = request.IdGroup,
-            CriadoEm = DateTime.UtcNow
-        };
-
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-
-        return Ok(new { message = "Usuário cadastrado com sucesso!" });
-    }
-
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequiestDto request)
     {

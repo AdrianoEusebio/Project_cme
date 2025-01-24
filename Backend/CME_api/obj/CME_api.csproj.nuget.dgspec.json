@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\adria\\OneDrive\\Área de Trabalho\\projetos\\Project_CME\\Backend\\CME_api\\CME_api.csproj": {}
+    "C:\\Users\\adria\\source\\repos\\Project_CME\\Backend\\CME_api\\CME_api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\adria\\OneDrive\\Área de Trabalho\\projetos\\Project_CME\\Backend\\CME_api\\CME_api.csproj": {
+    "C:\\Users\\adria\\source\\repos\\Project_CME\\Backend\\CME_api\\CME_api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\adria\\OneDrive\\Área de Trabalho\\projetos\\Project_CME\\Backend\\CME_api\\CME_api.csproj",
+        "projectUniqueName": "C:\\Users\\adria\\source\\repos\\Project_CME\\Backend\\CME_api\\CME_api.csproj",
         "projectName": "CME_api",
-        "projectPath": "C:\\Users\\adria\\OneDrive\\Área de Trabalho\\projetos\\Project_CME\\Backend\\CME_api\\CME_api.csproj",
+        "projectPath": "C:\\Users\\adria\\source\\repos\\Project_CME\\Backend\\CME_api\\CME_api.csproj",
         "packagesPath": "C:\\Users\\adria\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\adria\\OneDrive\\Área de Trabalho\\projetos\\Project_CME\\Backend\\CME_api\\obj\\",
+        "outputPath": "C:\\Users\\adria\\source\\repos\\Project_CME\\Backend\\CME_api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -52,7 +52,7 @@
           "dependencies": {
             "BCrypt.Net-Next": {
               "target": "Package",
-              "version": "[4.0.3, )"
+              "version": "[4.0.2, )"
             },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
@@ -71,6 +71,14 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[9.0.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.1, )"
+            },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[8.3.1, )"
             },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",

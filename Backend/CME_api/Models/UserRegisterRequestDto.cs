@@ -1,4 +1,4 @@
-public class RegisterRequestDto
+public class UserRegisterRequestDto
 {
     public string Username { get; set; } = string.Empty;
     public string HashPassword { get; set; } = string.Empty;
