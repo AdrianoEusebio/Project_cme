@@ -34,8 +34,7 @@ public class MyDbContext : DbContext
         .HasConversion<string>();
 
         modelBuilder.Entity<Receiving>()
-            .HasIndex(r => r.SerialMaterial)
-            .IsUnique();
+            .HasIndex(r => r.SerialMaterial);
 
         modelBuilder.Entity<Washing>()
             .HasIndex(w => w.SerialMaterial);

@@ -14,14 +14,14 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequiestDto request)
+    public async Task<IActionResult> Login([FromBody] UserLoginDto request)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
 
         if (user == null)
             return NotFound(new { message = "Usuário não encontrado" });
 
-        if (!BCrypt.Net.BCrypt.Verify(request.HashPassword, user.HashPassword))
+        if (!BCrypt.Net.BCrypt.Verify(request.Password, user.HashPassword))
             return BadRequest(new { message = "Senha incorreta" });
 
         var token = _userService.GenerateJwtToken(user);
@@ -29,7 +29,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterUser([FromBody] UserRegisterRequestDto request)
+    public async Task<IActionResult> RegisterUser([FromBody] UserRegisterDto request)
     {
         if (await _context.Users.AnyAsync(u => u.Username == request.Username))
             return BadRequest(new { message = "Username já está em uso!" });
@@ -71,7 +71,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutUser(int id, UserRegisterRequestDto request)
+    public async Task<IActionResult> PutUser(int id, UserRegisterDto request)
     {
         var existingUser = await _context.Users.FindAsync(id);
 
@@ -99,20 +99,16 @@ public class UserController : ControllerBase
 
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser(int id, [FromBody] AdminAuthDto adminAuth)
+    public async Task<IActionResult> DeleteUser(int id, [FromBody] UserLoginDto userLoginDto)
     {
 
         var userToDelete = await _context.Users.FindAsync(id);
         if (userToDelete == null)
             return NotFound(new { message = "Usuário não encontrado" });
 
-        //bool usuarioEmUso = await _context.Materiais.AnyAsync(m => m.IdGroup == id); // Exemplo de verificação
-        //if (usuarioEmUso)
-        //return BadRequest(new { message = "Usuário já foi utilizado em processos e não pode ser deletado" });
+        var adminUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == userLoginDto.Username);
 
-        var adminUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == adminAuth.Username);
-
-        if (adminUser == null || !BCrypt.Net.BCrypt.Verify(adminAuth.Password, adminUser.HashPassword))
+        if (adminUser == null || !BCrypt.Net.BCrypt.Verify(userLoginDto.Password, adminUser.HashPassword))
             return Unauthorized(new { message = "Credenciais inválidas" });
 
         if (adminUser.IdGroup != 1) // 1 = Admin

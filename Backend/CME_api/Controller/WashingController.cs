@@ -12,7 +12,7 @@ public class WashingController : ControllerBase
         _context = context;
     }
 
-    [HttpPost("start/{serial}")]
+    [HttpPost("start")]
     public async Task<ActionResult<Washing>> StartWashing([FromBody] WashingDto washingDto)
     {
         var washing = new Washing{
@@ -47,9 +47,10 @@ public class WashingController : ControllerBase
         return CreatedAtAction(nameof(GetWashings), new { id = washing.IdWashing }, washing);
     }
 
-    [HttpPost("finish/{serial}")]
+    [HttpPost("finish")]
     public async Task<IActionResult> FinishWashing([FromBody] WashingDto washingDto)
     {
+
         var material = await _context.Materials
             .FirstOrDefaultAsync(m => m.Serial == washingDto.SerialMaterial && m.Status == MaterialStatus.LAVAGEM_INICIADA);
 
@@ -67,6 +68,12 @@ public class WashingController : ControllerBase
         await _context.SaveChangesAsync();
 
         washing.IsWashed = true;
+        await _context.SaveChangesAsync();
+
+        washing.IdUser = washingDto.IdUser;
+        await _context.SaveChangesAsync();
+
+        washing.EntryDate = DateTime.UtcNow;;
         await _context.SaveChangesAsync();
 
         var process = new ProcessHistory

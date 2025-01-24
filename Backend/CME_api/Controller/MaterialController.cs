@@ -12,7 +12,7 @@ public class MaterialController : ControllerBase
         _context = context;
     }
 
-    [HttpPost]
+    [HttpPost("register")]
     public async Task<ActionResult<Material>> CreateMaterial(MaterialDto materialDto)
     {
         var material = new Material
@@ -20,7 +20,7 @@ public class MaterialController : ControllerBase
             IdUser = materialDto.IdUser,
             ExpirationDate = materialDto.ExpirationDate,
             Type = materialDto.Type,
-            Name = materialDto.Name
+            Name = materialDto.Name 
         };
 
         _context.Materials.Add(material);
@@ -43,14 +43,12 @@ public class MaterialController : ControllerBase
         return CreatedAtAction(nameof(GetMaterialById), new { id = material.IdMaterial }, material);
     }
 
-    // Buscar todos os materiais (GET)
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Material>>> GetAllMaterials()
     {
         return await _context.Materials.ToListAsync();
     }
 
-    // Buscar material por ID (GET)
     [HttpGet("{id}")]
     public async Task<ActionResult<Material>> GetMaterialById(int id)
     {
@@ -62,7 +60,6 @@ public class MaterialController : ControllerBase
         return material;
     }
 
-    // Deletar material (DELETE)
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteMaterial(int id)
     {

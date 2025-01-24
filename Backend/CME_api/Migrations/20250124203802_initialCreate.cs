@@ -21,7 +21,7 @@ namespace CME_api.Migrations
                     SerialMaterial = table.Column<string>(type: "text", nullable: false),
                     IdUser = table.Column<int>(type: "integer", nullable: false),
                     EntryDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Sector = table.Column<string>(type: "text", nullable: false)
+                    Sector = table.Column<string>(type: "varchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,10 +37,10 @@ namespace CME_api.Migrations
                     SerialMaterial = table.Column<string>(type: "text", nullable: false),
                     IdUser = table.Column<int>(type: "integer", nullable: false),
                     EntryData = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IdReceiving = table.Column<int>(type: "integer", nullable: true),
-                    IdDistribution = table.Column<int>(type: "integer", nullable: true),
-                    WashingId = table.Column<int>(type: "integer", nullable: true),
-                    EnumStatus = table.Column<string>(type: "text", nullable: false)
+                    IdReceiving = table.Column<int>(type: "integer", nullable: false),
+                    IdDistribution = table.Column<int>(type: "integer", nullable: false),
+                    IdWashing = table.Column<int>(type: "integer", nullable: false),
+                    EnumStatus = table.Column<string>(type: "varchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -189,6 +189,9 @@ namespace CME_api.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("DELETE FROM Users WHERE Username = 'superadmin'");
+            migrationBuilder.Sql("DELETE FROM UserGroups WHERE Name IN ('Admin', 'Enfermeiro')");
+
             migrationBuilder.DropTable(
                 name: "Distributions");
 
@@ -209,9 +212,6 @@ namespace CME_api.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserGroups");
-
-            migrationBuilder.Sql("DELETE FROM Users WHERE Username = 'superadmin'");
-            migrationBuilder.Sql("DELETE FROM UserGroups WHERE Name IN ('Admin', 'Enfermeiro')");
         }
     }
 }

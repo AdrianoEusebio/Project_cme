@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+
 public class MaterialDto
 {
     public int IdUser { get; set; }

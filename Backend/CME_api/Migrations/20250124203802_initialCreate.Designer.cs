@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CME_api.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20250124183742_initialCreate")]
+    [Migration("20250124203802_initialCreate")]
     partial class initialCreate
     {
         /// <inheritdoc />
@@ -40,7 +40,7 @@ namespace CME_api.Migrations
 
                     b.Property<string>("Sector")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("SerialMaterial")
                         .IsRequired()
@@ -53,7 +53,7 @@ namespace CME_api.Migrations
                     b.ToTable("Distributions");
                 });
 
-            modelBuilder.Entity("Materials", b =>
+            modelBuilder.Entity("Material", b =>
                 {
                     b.Property<int>("IdMaterial")
                         .ValueGeneratedOnAdd()
@@ -108,23 +108,23 @@ namespace CME_api.Migrations
 
                     b.Property<string>("EnumStatus")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("varchar(50)");
 
-                    b.Property<int?>("IdDistribution")
+                    b.Property<int>("IdDistribution")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("IdReceiving")
+                    b.Property<int>("IdReceiving")
                         .HasColumnType("integer");
 
                     b.Property<int>("IdUser")
                         .HasColumnType("integer");
 
+                    b.Property<int>("IdWashing")
+                        .HasColumnType("integer");
+
                     b.Property<string>("SerialMaterial")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int?>("WashingId")
-                        .HasColumnType("integer");
 
                     b.HasKey("IdProcess");
 
@@ -237,7 +237,7 @@ namespace CME_api.Migrations
                     b.ToTable("Washings");
                 });
 
-            modelBuilder.Entity("Materials", b =>
+            modelBuilder.Entity("Material", b =>
                 {
                     b.HasOne("User", "User")
                         .WithMany()

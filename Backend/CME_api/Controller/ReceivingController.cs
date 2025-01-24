@@ -13,11 +13,11 @@ public class ReceivingController : ControllerBase
         _context = context;
     }
 
-    [HttpPost]
-    public async Task<ActionResult<Receiving>> PostReceiving(Receiving receiving)
+    [HttpPost("register")]
+    public async Task<ActionResult<Receiving>> PostReceiving([FromBody]ReceivingDto receivingDto)
     {
         var material = await _context.Materials
-            .FirstOrDefaultAsync(m => m.Serial == receiving.SerialMaterial &&
+            .FirstOrDefaultAsync(m => m.Serial == receivingDto.SerialMaterial &&
                                      (m.Status == MaterialStatus.SEM_PROCESSOS || m.Status == MaterialStatus.DISTRIBUIDO));
 
         if (material == null)
@@ -26,8 +26,14 @@ public class ReceivingController : ControllerBase
         material.Status = MaterialStatus.RECEBIDO;
         await _context.SaveChangesAsync();
 
+        var receiving = new Receiving{
+            SerialMaterial = receivingDto.SerialMaterial,
+            IdUser = receivingDto.IdUser,
+        };
+
         _context.Receivings.Add(receiving);
         await _context.SaveChangesAsync();
+
 
         var process = new ProcessHistory
         {
@@ -50,6 +56,7 @@ public class ReceivingController : ControllerBase
         var receivings = await _context.Materials
             .Where(m => m.Status == MaterialStatus.SEM_PROCESSOS || m.Status == MaterialStatus.DISTRIBUIDO)
             .ToListAsync();
+
         return Ok(receivings);
     }
 }
