@@ -14,3 +14,4 @@ ENV DOTNET_USE_POLLING_FILE_WATCHER=1
 
 # Comando para rodar a aplicação com Hot Reload
 CMD ["dotnet", "watch", "run", "--project", "/app/CME_api.csproj", "--no-launch-profile", "--no-hot-restart"]
+

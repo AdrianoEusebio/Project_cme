@@ -6,9 +6,26 @@ using Microsoft.EntityFrameworkCore;
 public class UserController : ControllerBase
 {
     private readonly MyDbContext _context;
-    public UserController(MyDbContext context)
+    private readonly IUserService _userService;
+    public UserController(MyDbContext context, IUserService userService)
     {
         _context = context;
+        _userService = userService;
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequiestDto request)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+
+        if (user == null)
+            return NotFound(new { message = "Usuário não encontrado" });
+
+        if (!BCrypt.Net.BCrypt.Verify(request.HashPassword, user.HashPassword))
+            return BadRequest(new { message = "Senha incorreta" });
+
+        var token = _userService.GenerateJwtToken(user);
+        return Ok(new { Username = user.Username, IdGroup = user.IdGroup, Token = token });
     }
 
     [HttpPost("register")]

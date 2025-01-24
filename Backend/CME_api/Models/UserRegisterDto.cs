@@ -1,4 +1,4 @@
-public class LoginRequiestDto
+public class UserRegisterDto
 {
     public string Username { get; set; } = string.Empty;
     public string HashPassword { get; set; } = string.Empty;

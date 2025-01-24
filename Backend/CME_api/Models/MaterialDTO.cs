@@ -1,4 +1,4 @@
-public class MaterialDTO
+public class MaterialDto
 {
     public int IdUser { get; set; }
     public DateTime ExpirationDate { get; set; }

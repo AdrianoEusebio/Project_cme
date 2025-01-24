@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-public class Materials
+public class Material
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public int IdMaterial { get; set; }
     //
 
     [Required]
@@ -33,7 +33,7 @@ public class Materials
 
     [Required]
     [Column(TypeName = "varchar(50)")]
-    public MaterialStatus Status { get; set; } = MaterialStatus.NO_PROCESS;
+    public MaterialStatus Status { get; set; } = MaterialStatus.SEM_PROCESSOS;
     //
 
     [ForeignKey(nameof(User))]
@@ -44,6 +44,6 @@ public class Materials
     //
      public void GenerateSerial()
     {
-        Serial = $"{Name.Substring(0, 3).ToUpper()}{Id.ToString("D3")}";
+        Serial = $"{Name.Substring(0, 3).ToUpper()}{IdMaterial.ToString("D3")}";
     }
 }

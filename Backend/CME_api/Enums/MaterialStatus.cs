@@ -1,4 +1,10 @@
 public enum MaterialStatus
 {
-    NO_PROCESS
+    SEM_PROCESSOS,
+    RECEBIDO,
+    DISTRIBUIDO,
+    LAVAGEM_INICIADA,
+    LAVAGEM_FINALIZADA,
+    DESCARTADO
+
 }
