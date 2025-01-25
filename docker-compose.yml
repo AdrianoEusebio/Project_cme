@@ -23,7 +23,7 @@ services:
     image: ${DOCKER_REGISTRY-}backend
     container_name: Backend
     build:
-      context: ./backend
+      context: ./Backend
       dockerfile: Dockerfile
       target: dev
     ports:
