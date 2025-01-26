@@ -7,17 +7,19 @@ using Microsoft.IdentityModel.Tokens;
 public class UserService : IUserService
 {
     private readonly MyDbContext _context;
+    private readonly IConfiguration _config;
 
-    public UserService(MyDbContext context)
+    public UserService(MyDbContext context, IConfiguration configuration)
     {
+        _config = configuration;
         _context = context;
-    } 
-    
+    }
+
     public async Task<User?> Authenticate(string username, string password)
     {
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
 
-        if (user == null || user.GenerateHashPassword(password) != password)
+        if (BCrypt.Net.BCrypt.Verify(password,user.HashPassword))
             return null;
 
         if (!user.VerifyPassword(password, user.GenerateHashPassword(password)))
@@ -29,13 +31,14 @@ public class UserService : IUserService
     public string GenerateJwtToken(User user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes("super secret key");
+        var key  = Encoding.ASCII.GetBytes(s: _config["Jwt:Key"]);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim("Id_Group", user.IdGroup.ToString())
+                new Claim(ClaimTypes.Role, user.IdGroup.ToString())
+
             }),
             Expires = DateTime.UtcNow.AddHours(2),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

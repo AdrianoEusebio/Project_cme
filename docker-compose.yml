@@ -1,4 +1,3 @@
-version: '3.4'
 services:
   Database:
     image: postgres:latest
@@ -17,10 +16,12 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
-      retries: 5   
+      retries: 5
+    networks:
+      - cme_network   
 
   Backend:
-    image: ${DOCKER_REGISTRY-}backend
+    image: backend-cme
     container_name: Backend
     build:
       context: ./Backend
@@ -40,6 +41,24 @@ services:
     volumes:
       - ./Backend/CME_api:/app
       - ~/.nuget/packages:/root/.nuget/packages
-     
+    networks:
+      - cme_network
+
+  Frontend:
+    image: frontend-cme
+    container_name: Frontend
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - Backend
+    networks:
+      - cme_network  
+        
 volumes:
   postgres_data:
+networks:
+  cme_network:
+    driver: bridge
