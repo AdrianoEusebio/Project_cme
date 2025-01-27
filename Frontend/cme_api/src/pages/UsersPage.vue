@@ -14,7 +14,7 @@
         <main class="content">
             <header>
                 <h1 class="title">CMEBringel - Users</h1>
-                <button class="account-button">👤 Account</button>
+                <button class="account-button" @click="showUserInfo">👤 Account</button>
             </header>
 
             <div class="table-actions">
@@ -56,6 +56,7 @@
 
 <script>
 import "@/assets/css/homeStyles.css";
+import authService from "@/services/authService.js";
 
 export default {
     data() {
@@ -88,6 +89,9 @@ export default {
         },
         deleteUser(user) {
             console.log(`Excluindo usuário: ${user.username}`);
+        },
+        async showUserInfo() {
+            await authService.getUserCredentials();
         }
     }
 };

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CME_api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+413e89ebc5c6a0d8b0a435a68e915b7a71d59525")]
 [assembly: System.Reflection.AssemblyProductAttribute("CME_api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CME_api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

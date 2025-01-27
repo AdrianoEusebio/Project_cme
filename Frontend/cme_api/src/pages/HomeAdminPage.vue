@@ -14,7 +14,7 @@
         <main class="content">
             <header>
                 <h1 class="title">CMEBringel - Admin</h1>
-                <button class="account-button">👤 Account</button>
+                <button class="account-button" @click="showUserInfo">👤 Account</button>
             </header>
 
             <!-- Process History Table -->
@@ -49,6 +49,7 @@
 
 <script>
 import "@/assets/css/homeStyles.css";
+import authService from "@/services/authService.js";
 
 export default {
     data() {
@@ -72,6 +73,9 @@ export default {
         },
         generatePDF() {
             console.log("Generating PDF...");
+        },
+        async showUserInfo() {
+            await authService.getUserCredentials();
         }
     }
 };
@@ -84,7 +88,6 @@ export default {
     font-weight: bold;
 }
 
-/* Estilização da Tabela */
 .table-wrapper {
     overflow-x: auto;
 }

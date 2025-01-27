@@ -14,7 +14,7 @@
         <main class="content">
             <header>
                 <h1 class="title">CMEBringel - Process</h1>
-                <button class="account-button">👤 Account</button>
+                <button class="account-button" @click="showUserInfo">👤 Account</button>
             </header>
 
             <!-- Process Table Switch Buttons -->
@@ -30,11 +30,9 @@
                 </button>
             </div>
 
-            <!-- Table -->
             <section class="process-history">
                 <h2>{{ tableTitle }}</h2>
 
-                <!-- Action Buttons -->
                 <div class="table-actions">
                     <button class="add-button" @click="addMaterial">➕ Adicionar Material</button>
                     <p/>
@@ -73,6 +71,7 @@
 
 <script>
 import "@/assets/css/homeStyles.css";
+import authService from "@/services/authService.js";
 
 export default {
     data() {
@@ -130,6 +129,9 @@ export default {
         },
         deleteMaterial(item) {
             console.log(`Excluindo material: ${item.material}`);
+        },
+        async showUserInfo() {
+            await authService.getUserCredentials();
         }
     }
 };
