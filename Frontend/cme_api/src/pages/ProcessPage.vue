@@ -1,23 +1,22 @@
 <template>
     <div class="home-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <h2>Menu</h2>
-            <button @click="handleNavigation('homeadmin')" :class="{ active: isActive('homeadmin') }">🏠 Histórico</button>
-            <button @click="handleNavigation('process')" :class="{ active: isActive('process') }">📋 Process</button>
-            <button @click="handleNavigation('materials')" :class="{ active: isActive('materials') }">📦 Materials</button>
-            <button @click="handleNavigation('users')" :class="{ active: isActive('users') }">👥 Users</button>
-            <button @click="generatePDF">📄 Generate PDF</button>
+            <button @click="handleNavigation('home')" :class="{ active: isActive('home') }">Histórico</button>
+            <button @click="handleNavigation('process')" :class="{ active: isActive('process') }">Process</button>
+            <button v-if="isAdmin" @click="handleNavigation('materials')" :class="{ active: isActive('materials') }">
+                Materials</button>
+            <button v-if="isAdmin" @click="handleNavigation('users')" :class="{ active: isActive('users') }">
+                Users</button>
+            <button @click="generatePDF">Generate PDF</button>
         </aside>
 
-        <!-- Main Content -->
         <main class="content">
             <header>
                 <h1 class="title">CMEBringel - Process</h1>
                 <button class="account-button" @click="showUserInfo">👤 Account</button>
             </header>
 
-            <!-- Process Table Switch Buttons -->
             <div class="process-buttons">
                 <button :class="{ active: selectedTable === 'receiving' }" @click="selectedTable = 'receiving'">
                     📥 Receiving
@@ -35,7 +34,7 @@
 
                 <div class="table-actions">
                     <button class="add-button" @click="addMaterial">➕ Adicionar Material</button>
-                    <p/>
+                    <p />
                 </div>
 
                 <div class="table-wrapper">
@@ -76,6 +75,7 @@ import authService from "@/services/authService.js";
 export default {
     data() {
         return {
+            isAdmin: false,
             selectedTable: "receiving",
             tables: {
                 receiving: {
@@ -116,7 +116,7 @@ export default {
         },
         handleNavigation(route) {
             if (this.isActive(route)) {
-                location.reload(); // Recarrega a página se o usuário clicar onde já está
+                location.reload();
             } else {
                 this.$router.push(`/${route}`);
             }
@@ -132,7 +132,18 @@ export default {
         },
         async showUserInfo() {
             await authService.getUserCredentials();
+        },
+        checkAdminAccess() {
+            const role = localStorage.getItem("role");
+            this.isAdmin = role === "1";
         }
+    },
+    mounted() {
+        this.checkAdminAccess();
+        window.addEventListener("roleUpdated", this.checkAdminAccess);
+    },
+    beforeUnmount() {
+        window.removeEventListener("roleUpdated", this.checkAdminAccess);
     }
 };
 </script>

@@ -3,11 +3,11 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <h2>Menu</h2>
-            <button @click="handleNavigation('home')" :class="{ active: isActive('home') }">🏠 Histórico</button>
-            <button @click="handleNavigation('process')" :class="{ active: isActive('process') }">📋 Process</button>
-            <button @click="handleNavigation('materials')" :class="{ active: isActive('materials') }">📦 Materials</button>
-            <button @click="handleNavigation('users')" :class="{ active: isActive('users') }">👥 Users</button>
-            <button @click="generatePDF">📄 Generate PDF</button>
+            <button @click="handleNavigation('home')" :class="{ active: isActive('home') }">Histórico</button>
+            <button @click="handleNavigation('process')" :class="{ active: isActive('process') }">Process</button>
+            <button @click="handleNavigation('materials')" :class="{ active: isActive('materials') }">Materials</button>
+            <button @click="handleNavigation('users')" :class="{ active: isActive('users') }">Users</button>
+            <button @click="generatePDF">Generate PDF</button>
         </aside>
 
         <!-- Main Content -->

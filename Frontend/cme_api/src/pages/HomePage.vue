@@ -3,19 +3,21 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <h2>Menu</h2>
-            <button @click="handleNavigation('home')" :class="{ active: isActive('home') }">🏠 Histórico</button>
-            <button @click="handleNavigation('process')" :class="{ active: isActive('process') }">📋 Process</button>
-            <button @click="generatePDF">📄 Generate PDF</button>
+            <button @click="handleNavigation('home')" :class="{ active: isActive('home') }">Histórico</button>
+            <button @click="handleNavigation('process')" :class="{ active: isActive('process') }">Process</button>
+            <button v-if="isAdmin" @click="handleNavigation('materials')" :class="{ active: isActive('materials') }">
+                Materials</button>
+            <button v-if="isAdmin" @click="handleNavigation('users')" :class="{ active: isActive('users') }">
+                Users</button>
+            <button @click="generatePDF">Generate PDF</button>
         </aside>
 
-        <!-- Main Content -->
         <main class="content">
             <header>
                 <h1 class="title">CMEBringel - Histórico</h1>
                 <button class="account-button" @click="showUserInfo">👤 Account</button>
             </header>
 
-            <!-- Process History Table -->
             <section class="process-history">
                 <h2>Histórico de Processos</h2>
                 <div class="table-wrapper">
@@ -52,6 +54,7 @@ import authService from "@/services/authService.js";
 export default {
     data() {
         return {
+            isAdmin: false,
             processHistory: [
                 { id: 1, material: "Scalpel", user: "John Doe", status: "Finalizado", date: "2025-01-15" },
                 { id: 2, material: "Gauze", user: "Jane Smith", status: "Pendente", date: "2025-01-14" }
@@ -74,7 +77,19 @@ export default {
         },
         async showUserInfo() {
             await authService.getUserCredentials();
+        },
+
+        checkAdminAccess() {
+            const role = localStorage.getItem("role");
+            this.isAdmin = role === "1"; 
         }
+    },
+    mounted() {
+        this.checkAdminAccess();
+        window.addEventListener("roleUpdated", this.checkAdminAccess);
+    },
+    beforeUnmount() {
+        window.removeEventListener("roleUpdated", this.checkAdminAccess);
     }
 };
 </script>

@@ -36,12 +36,8 @@ export default {
         localStorage.setItem("idGroup", response.idGroup);
 
         console.log("Usuário logado:", response);
-
-        if (response.idGroup === 1) {
-          router.push("/homeadmin");
-        } else {
-          router.push("/home");
-        }
+        router.push("/home");
+        
       } catch (error) {
         errorMessage.value = "Usuário ou senha inválidos!";
       }
@@ -57,7 +53,7 @@ export default {
 </script>
 
 <style scoped>
-/* Estilo padronizado com a HomePage */
+
 .login-container {
   display: flex;
   justify-content: center;

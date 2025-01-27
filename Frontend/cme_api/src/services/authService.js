@@ -19,6 +19,8 @@ export default {
       localStorage.setItem("email", email);
       localStorage.setItem("role", idGroup);
 
+      window.dispatchEvent(new Event("roleUpdated"))
+
       this.getUserCredentials();
 
       return response.data;
@@ -31,8 +33,6 @@ export default {
     try {
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("userId");
-      console.log("token:", token);
-      console.log("ID:", userId);
 
       if (!token || !userId) {
         alert("Usuário não está logado.");
