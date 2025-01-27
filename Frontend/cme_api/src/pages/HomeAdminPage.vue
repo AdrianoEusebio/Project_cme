@@ -3,15 +3,17 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <h2>Menu</h2>
-            <button @click="handleNavigation('home')" :class="{ active: isActive('home') }">🏠 Histórico</button>
+            <button @click="handleNavigation('homeadmin')" :class="{ active: isActive('homeadmin') }">🏠 Histórico</button>
             <button @click="handleNavigation('process')" :class="{ active: isActive('process') }">📋 Process</button>
+            <button @click="handleNavigation('materials')" :class="{ active: isActive('materials') }">📦 Materials</button>
+            <button @click="handleNavigation('users')" :class="{ active: isActive('users') }">👥 Users</button>
             <button @click="generatePDF">📄 Generate PDF</button>
         </aside>
 
         <!-- Main Content -->
         <main class="content">
             <header>
-                <h1 class="title">CMEBringel - Histórico</h1>
+                <h1 class="title">CMEBringel - Admin</h1>
                 <button class="account-button">👤 Account</button>
             </header>
 
@@ -52,8 +54,8 @@ export default {
     data() {
         return {
             processHistory: [
-                { id: 1, material: "Scalpel", user: "John Doe", status: "Finalizado", date: "2025-01-15" },
-                { id: 2, material: "Gauze", user: "Jane Smith", status: "Pendente", date: "2025-01-14" }
+                { id: 1, material: "Syringe", user: "Emily White", status: "Distribuído", date: "2025-01-18" },
+                { id: 2, material: "Bandage", user: "Tom Blue", status: "Em Processo", date: "2025-01-19" }
             ]
         };
     },

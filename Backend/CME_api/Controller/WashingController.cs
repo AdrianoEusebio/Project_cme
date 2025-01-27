@@ -21,12 +21,12 @@ public class WashingController : ControllerBase
         };
 
         var material = await _context.Materials
-            .FirstOrDefaultAsync(m => m.Serial == washing.SerialMaterial && m.Status == MaterialStatus.RECEBIDO);
+            .FirstOrDefaultAsync(m => m.Serial == washing.SerialMaterial && m.Status == MaterialStatus.RECEBIDO.ToString());
 
         if (material == null)
             return BadRequest("Lavagem só pode ser iniciada se o material estiver com status RECEBIDO.");
 
-        material.Status = MaterialStatus.LAVAGEM_INICIADA;
+        material.Status = MaterialStatus.LAVAGEM_INICIADA.ToString();
         await _context.SaveChangesAsync();
 
         _context.Washings.Add(washing);
@@ -38,7 +38,7 @@ public class WashingController : ControllerBase
             IdUser = washing.IdUser,
             EntryData = washing.EntryDate,
             IdWashing = washing.IdWashing,
-            EnumStatus = MaterialStatus.LAVAGEM_INICIADA
+            EnumStatus = MaterialStatus.LAVAGEM_INICIADA.ToString()
         };
 
         _context.ProcessHistories.Add(process);
@@ -52,7 +52,7 @@ public class WashingController : ControllerBase
     {
 
         var material = await _context.Materials
-            .FirstOrDefaultAsync(m => m.Serial == washingDto.SerialMaterial && m.Status == MaterialStatus.LAVAGEM_INICIADA);
+            .FirstOrDefaultAsync(m => m.Serial == washingDto.SerialMaterial && m.Status == MaterialStatus.LAVAGEM_INICIADA.ToString());
 
         if (material == null)
             return BadRequest("Lavagem não pode ser finalizada.");
@@ -64,7 +64,7 @@ public class WashingController : ControllerBase
             return BadRequest("Erro: Não há registro de lavagem pendente para esse material.");
 
         
-        material.Status = MaterialStatus.LAVAGEM_FINALIZADA;
+        material.Status = MaterialStatus.LAVAGEM_FINALIZADA.ToString();
         await _context.SaveChangesAsync();
 
         washing.IsWashed = true;
@@ -82,7 +82,7 @@ public class WashingController : ControllerBase
             IdUser = washing.IdUser,
             EntryData = washing.EntryDate,
             IdWashing = washing.IdWashing,
-            EnumStatus = MaterialStatus.LAVAGEM_FINALIZADA
+            EnumStatus = MaterialStatus.LAVAGEM_FINALIZADA.ToString()
         };
 
         _context.ProcessHistories.Add(process);
@@ -95,7 +95,7 @@ public class WashingController : ControllerBase
     public async Task<IActionResult> GetWashings()
     {
         var washings = await _context.Materials
-            .Where(m => m.Status == MaterialStatus.RECEBIDO)
+            .Where(m => m.Status == MaterialStatus.RECEBIDO.ToString())
             .ToListAsync();
 
         return Ok(washings);

@@ -25,7 +25,7 @@ public class UserController : ControllerBase
             return BadRequest(new { message = "Senha incorreta" });
 
         var token = _userService.GenerateJwtToken(user);
-        return Ok(new { Username = user.Username, IdGroup = user.IdGroup, Token = token });
+        return Ok(new { IdUser = user.IdUser, Username = user.Username, IdGroup = user.IdGroup, Token = token });
     }
 
     [HttpPost("register")]
@@ -52,49 +52,47 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+    public async Task<ActionResult<IEnumerable<object>>> GetUsers()
     {
-        return await _context.Users.ToListAsync();
-    }
+        var users = await _context.Users
+            .Include(u => u.UserGroup)
+            .Select(u => new
+            {
+                u.IdUser,
+                u.Username,
+                u.Email,
+                u.CriadoEm,
+                IdGroup = u.IdGroup,
+                UserGroup = u.UserGroup.Name
+            })
+            .ToListAsync();
 
+        return Ok(users);
+    }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<User>> GetUser(int id)
+    public async Task<ActionResult<object>> GetUser(int id)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await _context.Users
+            .Include(u => u.UserGroup) 
+            .Where(u => u.IdUser == id)
+            .Select(u => new
+            {
+                u.IdUser,
+                u.Username,
+                u.Email,
+                u.CriadoEm,
+                IdGroup = u.IdGroup,
+                UserGroup = u.UserGroup.Name
+            })
+            .FirstOrDefaultAsync();
 
         if (user == null)
-        {
-            return NotFound("Usuario Não Encontrado");
-        }
-        return user;
-    }
-
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutUser(int id, UserRegisterDto request)
-    {
-        var existingUser = await _context.Users.FindAsync(id);
-
-        if (existingUser == null)
         {
             return NotFound("Usuário não encontrado");
         }
 
-        existingUser.Username = request.Username;
-        existingUser.HashPassword = BCrypt.Net.BCrypt.HashPassword(request.HashPassword);
-        existingUser.Email = request.Email;
-        existingUser.IdGroup = request.IdGroup;
-
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            return Conflict("Erro ao atualizar usuário");
-        }
-
-        return NoContent();
+        return Ok(user);
     }
 
 

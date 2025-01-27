@@ -35,5 +35,5 @@ public class ProcessHistory
 
     [Required]
     [Column(TypeName = "varchar(50)")]
-    public MaterialStatus EnumStatus { get; set; }
+    public string? EnumStatus { get; set; }
 }

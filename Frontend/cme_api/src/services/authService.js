@@ -1,11 +1,8 @@
 import axios from "axios";
 
-console.log("authService.js foi carregado!");
-
 const api = axios.create({
   baseURL: "http://localhost:8000",
 });
-console.log("Variavels:", api);
 
 export default {
   async login(username, password) {

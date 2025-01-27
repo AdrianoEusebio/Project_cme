@@ -28,12 +28,12 @@ public class Material
 
     [Required]
     [Column(TypeName = "varchar(50)")]
-    public MaterialType Type { get; set; }
+    public string? Type { get; set; }
     //
 
     [Required]
     [Column(TypeName = "varchar(50)")]
-    public MaterialStatus Status { get; set; } = MaterialStatus.SEM_PROCESSOS;
+    public string Status { get; set; } = MaterialStatus.SEM_PROCESSOS.ToString();
     //
 
     [ForeignKey(nameof(User))]

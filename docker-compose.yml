@@ -1,3 +1,4 @@
+version: '3'
 services:
   Database:
     image: postgres:latest
@@ -48,14 +49,19 @@ services:
     image: frontend-cme
     container_name: Frontend
     build:
-      context: ./Frontend
-      dockerfile: Dockerfile
+      context: ./Frontend/cme_api
+      dockerfile: ../Dockerfile
     ports:
-      - "8080:80"
+      - "8080:8080"
     depends_on:
       - Backend
     networks:
-      - cme_network  
+      - cme_network
+    volumes:
+      - ./Frontend/cme_api:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
         
 volumes:
   postgres_data:

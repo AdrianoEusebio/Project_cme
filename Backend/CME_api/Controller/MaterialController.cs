@@ -29,17 +29,6 @@ public class MaterialController : ControllerBase
         material.GenerateSerial();
         await _context.SaveChangesAsync();
 
-        var process = new ProcessHistory
-        {
-            SerialMaterial = material.Serial,
-            IdUser = material.IdUser,
-            EntryData = DateTime.UtcNow,
-            EnumStatus = material.Status,
-        };
-
-        _context.ProcessHistories.Add(process);
-        await _context.SaveChangesAsync();
-
         return CreatedAtAction(nameof(GetMaterialById), new { id = material.IdMaterial }, material);
     }
 
@@ -78,7 +67,7 @@ public class MaterialController : ControllerBase
         if (processHistory != null)
         {
 
-            processHistory.EnumStatus = MaterialStatus.DESCARTADO;
+            processHistory.EnumStatus = MaterialStatus.DESCARTADO.ToString();
             _context.ProcessHistories.Update(processHistory);
             await _context.SaveChangesAsync();
         } else

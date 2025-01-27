@@ -16,7 +16,7 @@ public class DistributionController : ControllerBase
     public async Task<IActionResult> GetDistributions()
     {
         var materials = await _context.Materials
-            .Where(m => m.Status == MaterialStatus.LAVAGEM_FINALIZADA)
+            .Where(m => m.Status == MaterialStatus.LAVAGEM_FINALIZADA.ToString())
             .ToListAsync();
 
         return Ok(materials);
@@ -35,12 +35,12 @@ public class DistributionController : ControllerBase
 
         var material = await _context.Materials
             .FirstOrDefaultAsync(m => m.Serial == distribution.SerialMaterial
-            && m.Status == MaterialStatus.LAVAGEM_FINALIZADA);
+            && m.Status == MaterialStatus.LAVAGEM_FINALIZADA.ToString());
 
         if (material == null)
             return BadRequest("Distribuição só pode ser feita para materiais com status LAVAGEM_FINALIZADA.");
 
-        material.Status = MaterialStatus.DISTRIBUIDO;
+        material.Status = MaterialStatus.DISTRIBUIDO.ToString();
         await _context.SaveChangesAsync();
 
 
@@ -53,7 +53,7 @@ public class DistributionController : ControllerBase
             IdUser = distribution.IdUser,
             EntryData = distribution.EntryDate,
             IdDistribution = distribution.IdDistribution,
-            EnumStatus = MaterialStatus.DISTRIBUIDO
+            EnumStatus = MaterialStatus.DISTRIBUIDO.ToString()
         };
 
         _context.ProcessHistories.Add(process);

@@ -18,12 +18,12 @@ public class ReceivingController : ControllerBase
     {
         var material = await _context.Materials
             .FirstOrDefaultAsync(m => m.Serial == receivingDto.SerialMaterial &&
-                                     (m.Status == MaterialStatus.SEM_PROCESSOS || m.Status == MaterialStatus.DISTRIBUIDO));
+                                     (m.Status == MaterialStatus.SEM_PROCESSOS.ToString() || m.Status == MaterialStatus.DISTRIBUIDO.ToString()));
 
         if (material == null)
             return BadRequest("Material não pode ser recebido.");
 
-        material.Status = MaterialStatus.RECEBIDO;
+        material.Status = MaterialStatus.RECEBIDO.ToString();
         await _context.SaveChangesAsync();
 
         var receiving = new Receiving{
@@ -41,7 +41,7 @@ public class ReceivingController : ControllerBase
             IdUser = receiving.IdUser,
             EntryData = receiving.EntryData,
             IdReceiving = receiving.IdReceiving,
-            EnumStatus = MaterialStatus.RECEBIDO
+            EnumStatus = MaterialStatus.RECEBIDO.ToString()
         };
 
         _context.ProcessHistories.Add(process);
@@ -54,7 +54,7 @@ public class ReceivingController : ControllerBase
     public async Task<IActionResult> GetReceivings()
     {
         var receivings = await _context.Materials
-            .Where(m => m.Status == MaterialStatus.SEM_PROCESSOS || m.Status == MaterialStatus.DISTRIBUIDO)
+            .Where(m => m.Status == MaterialStatus.SEM_PROCESSOS.ToString() || m.Status == MaterialStatus.DISTRIBUIDO.ToString())
             .ToListAsync();
 
         return Ok(receivings);
