@@ -2,21 +2,50 @@
 
 Projeto de uma API RESTful desenvolvida em C# com ASP.NET Core para autenticação e gerenciamento de usuários. O sistema utiliza JWT para autenticação segura e PostgreSQL para armazenar os dados.
 
-##Funcionalidades
+## 🏗️ Definição das Regras e Funcionalidades
 
-✅ Registro e login de usuários com criptografia de senha (BCrypt)
+📌 Endpoints Necessários
 
-✅ Autenticação via JWT
+🔹 Autenticação
 
-✅ Gerenciamento de grupos de usuários
+```bash
+Método	Endpoint	Descrição
+POST	/api/auth/login	Recebe Username e Password no body. Retorna 200 (success) com nome do usuário e nível de acesso, 404 se o usuário não for encontrado ou 400 se a senha estiver incorreta.
+POST	/api/auth/jwt	Recebe Username e Password no body. Retorna token ASC e token refresh em caso de sucesso.
+```
 
-✅ Integração com PostgreSQL usando Entity Framework Core
+# 🔹 Views e Permissões
 
-✅ Docker para facilitar a execução da aplicação
+🔑 View 1 - Administração de Usuários (Apenas para Admin)
 
-✅ Atribuição do Swagger
+📌 CRUD completo de usuários, exceto a exclusão de usuários que já foram utilizados em processos.
 
-##Diretorio
+📦 View 2 - Cadastro de Materiais (Apenas para Admin)
+
+📌 CRUD completo de materiais, com as seguintes regras:
+
+Regra: Não permitir deletar ou editar materiais que possuem registros em outras tabelas.
+
+Serial gerado automaticamente no formato:
+```bash
+ID = 1 | Nome = produtoteste | Serial = PRO001
+```
+## OBS: O campo "status" será preenchido automaticamente com NO_PROCESS ao criar um novo material.
+
+# ✅ Validações
+
+1. O nome do produto deve ter no mínimo 3 caracteres.
+2. A data de expiração do material não pode ser anterior à data atual.
+3. A senha do usuário deve conter mais de 3 caracteres e não pode conter espaços.
+4. O IdGroup define as permissões de acesso dos usuários.
+
+### Ao finalizar a lavagem:
+
+O campo IS_WASHED será alterado para TRUE.
+
+O status do material mudará para LAVAGEM FINALIZADA.
+
+## Diretorio
 
 ```bash
 📦 Projeto
@@ -63,20 +92,37 @@ Siga os passos abaixo para configurar e utilizar o sistema.
     - Usuário: `superadmin`
     - Senha: `admin123`
 
-##Configuração do Swagger
+## Configuração do Swagger
 
+Para visuzalizar o swagger, adicione a URL:
+```bash
+http://localhost:8000/swagger/index.html
+```
+# 🎨 Views do Sistema
 
-## Telas do Frontend
+## 🔹 Login
 
-HomePage: Tela principal onde mostrará a tabela de historico.
+📌 Tela simples para autenticação do usuário.
+✔ Apenas username e senha são utilizados.
+✔ Após o login bem-sucedido, o token JWT gerado será salvo no front-end.
 
-LoginPage: Tela onde efetuamos o Login.
+## 🔹 View Principal (Main)
 
-MaterialsPage: Tela onde mostrará a tabela e onde efetuamos o CRUD de Materiais.
+📌 Tela principal do sistema, contendo as opções disponíveis conforme o nível de acesso.
 
-ProcessPage: Tela onde efetuaremos os processos(Receiving,Washing e Distribution).
+## 🔹 View de Processos
 
-UsersPage: Tela onde mostrará a tabela e onde efetuamos o CRUD de Usuarios.
+📌 Tela que exibe e gerencia os processos do sistema.
+
+## 🔹 View de Materiais
+
+📌 Exibe a tabela de materiais e suas respectivas funcionalidades.
+✔ Apenas o Admin tem acesso.
+
+## 🔹 View de Usuários
+
+📌 Exibe a tabela de usuários e suas respectivas funcionalidades.
+✔ Apenas o Admin tem acesso.
 
 ## Contato
 
