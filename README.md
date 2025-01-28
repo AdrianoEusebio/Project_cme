@@ -4,6 +4,19 @@ Projeto de uma API RESTful desenvolvida em C# com ASP.NET Core para autenticaç�
 
 ## 🏗️ Definição das Regras e Funcionalidades
 
+✅ Registro e login de usuários com criptografia de senha (BCrypt)
+
+
+✅ Autenticação via JWT
+
+
+✅ Gerenciamento de grupos de usuários
+
+
+✅ Integração com PostgreSQL usando Entity Framework Core
+
+
+✅ Docker para facilitar a execução da aplicação
 
 🔹 Autenticação
 
