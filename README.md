@@ -38,27 +38,6 @@ O campo IS_WASHED será alterado para TRUE.
 
 O status do material mudará para LAVAGEM FINALIZADA.
 
-## Diretorio
-
-```bash
-📦 Projeto
- ┣ 📂 Controllers
- ┃ ┣ 📜 AuthController.cs    # Autenticação (login e registro)
- ┃ ┣ 📜 UserController.cs    # Gerenciamento de usuários
- ┃ 
- ┣ 📂 Models
- ┃ ┣ 📜 User.cs              # Modelo de usuário
- ┃ ┣ 📜 UserGroup.cs         # Modelo de grupo de usuários
- ┃
- ┣ 📂 Data
- ┃ ┣ 📜 MyDbContext.cs       # Configuração do banco de dados
- ┃ ┣ 📜 MyDbContextFactory.cs # Configuração para migrações
- ┃
- ┣ 📜 Dockerfile             # Configuração do Docker
- ┣ 📜 docker-compose.yml      # Configuração dos containers
- ┣ 📜 appsettings.json        # Configuração da aplicação
- ┣ 📜 README.md               # Documentação
-```
 ##Pré-requisitos
 Antes de rodar o projeto, instale:
 
