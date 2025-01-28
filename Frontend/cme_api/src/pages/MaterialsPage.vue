@@ -6,7 +6,6 @@
             <button @click="handleNavigation('process')" :class="{ active: isActive('process') }">Processos</button>
             <button class="active">Materiais</button>
             <button @click="handleNavigation('users')" :class="{ active: isActive('users') }">Usuários</button>
-            <button @click="generatePDF">Gerar PDF</button>
         </aside>
 
         <main class="content">

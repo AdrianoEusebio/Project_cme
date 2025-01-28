@@ -7,8 +7,7 @@
             <button v-if="isAdmin" @click="handleNavigation('materials')" :class="{ active: isActive('materials') }">
                 Materiais</button>
             <button v-if="isAdmin" @click="handleNavigation('users')" :class="{ active: isActive('users') }">
-                Usuarios</button>
-            <button @click="generatePDF">Gerar PDF</button>
+                Usuárioss</button>
         </aside>
 
         <main class="content">
