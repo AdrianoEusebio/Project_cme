@@ -57,14 +57,6 @@ Siga os passos abaixo para configurar e utilizar o sistema.
     - Usuário: `superadmin`
     - Senha: `admin123`
 
-##Endpoints Principais
-```bash
-Método	Endpoint	Descrição
-POST	/api/auth/register	Registro de usuário
-POST	/api/auth/login	Login e retorno do token JWT
-GET	/api/user/{id}	Buscar informações de um usuário
-```
-
 ##Configuração do Docker Compose
 ```bash
 version: '3'
