@@ -31,12 +31,6 @@ ID = 1 | Nome = produtoteste | Serial = PRO001
 ```
 ## OBS: O campo "status" será preenchido automaticamente com NO_PROCESS ao criar um novo material.
 
-# ✅ Validações
-
-1. O nome do produto deve ter no mínimo 3 caracteres.
-2. A data de expiração do material não pode ser anterior à data atual.
-3. A senha do usuário deve conter mais de 3 caracteres e não pode conter espaços.
-4. O IdGroup define as permissões de acesso dos usuários.
 
 ### Ao finalizar a lavagem:
 
