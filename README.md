@@ -78,7 +78,6 @@ http://localhost:8000/swagger/index.html
 
 📌 Tela simples para autenticação do usuário.
 ✔ Apenas username e senha são utilizados.
-✔ Após o login bem-sucedido, o token JWT gerado será salvo no front-end.
 
 ## 🔹 View Principal (Main)
 
