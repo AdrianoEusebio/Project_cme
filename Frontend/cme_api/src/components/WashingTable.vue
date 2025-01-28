@@ -60,7 +60,7 @@
                 <h3>Iniciar Lavagem</h3>
                 <label>Selecione o Material:</label>
                 <br />
-                <select v-model="newWashing.serialMaterial">
+                <select id="serialFilter" v-model="newWashing.serialMaterial">
                     <option disabled value="">Selecione um material</option>
                     <option v-for="item in washingData" :key="item.serial" :value="item.serial">{{ item.serial }} - {{
                         item.name }}</option>
@@ -77,7 +77,7 @@
                 <h3>Finalizar Lavagem</h3>
                 <label>Selecione o Material:</label>
                 <br />
-                <select v-model="finishWashing.serialMaterial">
+                <select id="serialFilter" v-model="finishWashing.serialMaterial">
                     <option disabled value="">Selecione um material</option>
                     <option v-for="item in filteredFinishWashingData" :key="item.serialMaterial"
                         :value="item.serialMaterial">

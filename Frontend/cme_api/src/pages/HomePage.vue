@@ -7,18 +7,31 @@
             <button v-if="isAdmin" @click="handleNavigation('materials')" :class="{ active: isActive('materials') }">
                 Materiais</button>
             <button v-if="isAdmin" @click="handleNavigation('users')" :class="{ active: isActive('users') }">
-                Usuarios</button>
-            <button @click="generatePDF">Gerar PDF</button>
+                Usuários</button>
         </aside>
 
         <main class="content">
             <header>
                 <h1 class="title">CMEBringel - Histórico</h1>
-                <button class="account-button" @click="showUserInfo">👤 Conta</button>
+                <div class="header-actions">
+                    <button class="account-button" @click="showUserInfo">👤 Conta</button>
+                    <button class="logout-button" @click="logout">🚪 Sair</button>
+                </div>
             </header>
 
             <section class="process-history">
                 <h2>Histórico de Processos</h2>
+
+                <div class="filter-wrapper">
+                    <label for="serialFilter">Filtrar por Serial:</label>
+                    <select id="serialFilter" v-model="selectedSerial">
+                        <option value="">Todos</option>
+                        <option v-for="serial in uniqueSerials" :key="serial" :value="serial">
+                            {{ serial }}
+                        </option>
+                    </select>
+                </div>
+
                 <div class="table-wrapper">
                     <table>
                         <thead>
@@ -31,7 +44,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in processHistory" :key="item.idProcess">
+                            <tr v-for="item in filteredProcessHistory" :key="item.idProcess">
                                 <td>{{ item.idProcess }}</td>
                                 <td>{{ item.serialMaterial }}</td>
                                 <td>{{ item.idUser }}</td>
@@ -55,8 +68,25 @@ export default {
     data() {
         return {
             isAdmin: false,
-            processHistory: []
+            processHistory: [],
+            selectedSerial: "" 
         };
+    },
+    computed: {
+        uniqueSerials() {
+            return [...new Set(this.processHistory.map(item => item.serialMaterial))];
+        },
+        filteredProcessHistory() {
+            let history = [...this.processHistory];
+
+            history.sort((a, b) => b.idProcess - a.idProcess);
+
+            if (this.selectedSerial) {
+                history = history.filter(item => item.serialMaterial === this.selectedSerial);
+            }
+
+            return history;
+        }
     },
     methods: {
         isActive(route) {
@@ -69,9 +99,6 @@ export default {
                 this.$router.push(`/${route}`);
             }
         },
-        generatePDF() {
-            console.log("Generating PDF...");
-        },
         async showUserInfo() {
             await authService.getUserCredentials();
         },
@@ -83,11 +110,22 @@ export default {
                 console.error("Erro ao buscar histórico de processos:", error);
             }
         },
-        formatDate(date) {
-            return date ? new Date(date).toLocaleDateString("pt-BR") : "-";
+        logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("role");
+            this.$router.push("/login");
         },
-        formatValue(value) {
-            return value === 0 || value === null || value === undefined ? "-" : value;
+        formatDate(date) {
+            return date
+                ? new Date(date).toLocaleString("pt-BR", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit"
+                  })
+                : "-";
         },
         checkAdminAccess() {
             const role = localStorage.getItem("role");
@@ -110,5 +148,33 @@ export default {
     background: #1abc9c;
     color: white;
     font-weight: bold;
+}
+
+.filter-wrapper {
+    margin-bottom: 15px;
+}
+
+.filter-wrapper label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.logout-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.logout-button:hover {
+    background-color: #c0392b;
 }
 </style>

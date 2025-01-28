@@ -157,15 +157,4 @@ export default {
     width: 90%;
     margin: auto;
 }
-
-input,
-select {
-    width: 90%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    transition: 0.3s;
-    text-align: left;
-}
 </style>

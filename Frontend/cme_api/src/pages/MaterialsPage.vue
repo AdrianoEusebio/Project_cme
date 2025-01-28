@@ -101,14 +101,11 @@ export default {
                 type: ""
             },
             materialTypes: [
-                "Luvas Cirúrgicas",
-                "Gazes Estéreis",
-                "Seringas",
-                "Agulhas",
-                "Cateteres",
-                "Fios de Sutura",
-                "Campo Cirúrgico",
-                "Equipamento de Proteção Individual (EPI)"
+                "Equipamento de Proteção Individual (EPI)",
+                "Equipamento Medico",
+                "Material Cirurgico",
+                "Material de Diagnostico",
+                "Instrumeto Cirugico",
             ],
             users: []
         };
@@ -175,7 +172,7 @@ export default {
         },
 
         async addMaterial() {
-            if (!this.newMaterial.name || !this.newMaterial.expirationDate || !this.newMaterial.type) {
+            if (!this.newMaterial.name || !this.newMaterial.expirationData || !this.newMaterial.type) {
                 return alert("Todos os campos são obrigatórios!");
             }
             const idUser = localStorage.getItem("id");
@@ -187,7 +184,7 @@ export default {
             try {
                 const response = await axios.post("http://localhost:8000/api/material/register", {
                     idUser,
-                    expirationDate: this.newMaterial.expirationDate,
+                    expirationDate: this.newMaterial.expirationData,
                     type: this.newMaterial.type,
                     name: this.newMaterial.name
                 });
