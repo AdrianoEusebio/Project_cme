@@ -59,7 +59,6 @@ Siga os passos abaixo para configurar e utilizar o sistema.
 
 ##Configuração do Docker Compose
 ```bash
-version: '3'
 services:
   Database:
     image: postgres:latest
