@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -23,5 +22,5 @@ public class Distribution
 
     [Required]
     [Column(TypeName = "varchar(50)")]
-    public DistributionSector Sector { get; set; } 
+    public string? Sector { get; set; } 
 }

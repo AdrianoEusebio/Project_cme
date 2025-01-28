@@ -42,7 +42,7 @@ public class Material
 
     public User User { get; set; } = null!;
     //
-     public void GenerateSerial()
+    public void GenerateSerial()
     {
         Serial = $"{Name.Substring(0, 3).ToUpper()}{IdMaterial.ToString("D3")}";
     }

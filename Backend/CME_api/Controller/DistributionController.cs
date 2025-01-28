@@ -1,63 +1,30 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 [Route("api/distribution")]
 [ApiController]
 public class DistributionController : ControllerBase
 {
-    private readonly MyDbContext _context;
+    private readonly IDistributionService _distributionService;
 
-    public DistributionController(MyDbContext context)
+    public DistributionController(IDistributionService distributionService)
     {
-        _context = context;
+        _distributionService = distributionService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetDistributions()
     {
-        var materials = await _context.Materials
-            .Where(m => m.Status == MaterialStatus.LAVAGEM_FINALIZADA.ToString())
-            .ToListAsync();
-
-        return Ok(materials);
+        var distributions = await _distributionService.GetDistributions();
+        return Ok(distributions);
     }
-
 
     [HttpPost]
     public async Task<IActionResult> CreateDistribution([FromBody] DistributionDto distributionDto)
     {
-        var distribution = new Distribution
-        {
-            SerialMaterial = distributionDto.SerialMaterial,
-            Sector = distributionDto.Sector,
-            IdUser = distributionDto.IdUser
-        };
+        var distribution = await _distributionService.CreateDistribution(distributionDto);
 
-        var material = await _context.Materials
-            .FirstOrDefaultAsync(m => m.Serial == distribution.SerialMaterial
-            && m.Status == MaterialStatus.LAVAGEM_FINALIZADA.ToString());
-
-        if (material == null)
+        if (distribution == null)
             return BadRequest("Distribuição só pode ser feita para materiais com status LAVAGEM_FINALIZADA.");
-
-        material.Status = MaterialStatus.DISTRIBUIDO.ToString();
-        await _context.SaveChangesAsync();
-
-
-        _context.Distributions.Add(distribution);
-        await _context.SaveChangesAsync();
-
-        var process = new ProcessHistory
-        {
-            SerialMaterial = distribution.SerialMaterial,
-            IdUser = distribution.IdUser,
-            EntryData = distribution.EntryDate,
-            IdDistribution = distribution.IdDistribution,
-            EnumStatus = MaterialStatus.DISTRIBUIDO.ToString()
-        };
-
-        _context.ProcessHistories.Add(process);
-        await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetDistributions), new { id = distribution.IdDistribution }, distribution);
     }

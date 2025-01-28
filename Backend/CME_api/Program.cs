@@ -20,6 +20,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMaterialService, MaterialService>();
+builder.Services.AddScoped<IProcessHistoryService, ProcessHistoryService>();
+builder.Services.AddScoped<IReceivingService, ReceivingService>();
+builder.Services.AddScoped<IDistributionService, DistributionService>();
+builder.Services.AddScoped<IWashingService, WashingService>();
+
+
+
 
 //RODA POR FAVOR
 builder.Services.AddAuthentication(options =>{

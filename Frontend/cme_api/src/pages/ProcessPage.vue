@@ -3,67 +3,32 @@
         <aside class="sidebar">
             <h2>Menu</h2>
             <button @click="handleNavigation('home')" :class="{ active: isActive('home') }">Histórico</button>
-            <button @click="handleNavigation('process')" :class="{ active: isActive('process') }">Process</button>
+            <button @click="handleNavigation('process')" :class="{ active: isActive('process') }">Processos</button>
             <button v-if="isAdmin" @click="handleNavigation('materials')" :class="{ active: isActive('materials') }">
-                Materials</button>
+                Materiais</button>
             <button v-if="isAdmin" @click="handleNavigation('users')" :class="{ active: isActive('users') }">
-                Users</button>
-            <button @click="generatePDF">Generate PDF</button>
+                Usuarios</button>
+            <button @click="generatePDF">Gerar PDF</button>
         </aside>
 
         <main class="content">
             <header>
-                <h1 class="title">CMEBringel - Process</h1>
+                <h1 class="title">CMEBringel - Processos</h1>
                 <button class="account-button" @click="showUserInfo">👤 Account</button>
             </header>
 
             <div class="process-buttons">
-                <button :class="{ active: selectedTable === 'receiving' }" @click="selectedTable = 'receiving'">
+                <button :class="{ active: selectedTable === 'ReceivingTable' }" @click="selectedTable = 'ReceivingTable'">
                     📥 Receiving
                 </button>
-                <button :class="{ active: selectedTable === 'washing' }" @click="selectedTable = 'washing'">
+                <button :class="{ active: selectedTable === 'WashingTable' }" @click="selectedTable = 'WashingTable'">
                     🧼 Washing
                 </button>
-                <button :class="{ active: selectedTable === 'distribution' }" @click="selectedTable = 'distribution'">
+                <button :class="{ active: selectedTable === 'DistributionTable' }" @click="selectedTable = 'DistributionTable'">
                     📦 Distribution
                 </button>
             </div>
-
-            <section class="process-history">
-                <h2>{{ tableTitle }}</h2>
-
-                <div class="table-actions">
-                    <button class="add-button" @click="addMaterial">➕ Adicionar Material</button>
-                    <p />
-                </div>
-
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Material</th>
-                                <th>Responsible User</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="item in tableData" :key="item.id">
-                                <td>{{ item.id }}</td>
-                                <td>{{ item.material }}</td>
-                                <td>{{ item.user }}</td>
-                                <td class="status">{{ item.status }}</td>
-                                <td>{{ item.date }}</td>
-                                <td>
-                                    <button class="small-button danger" @click="deleteMaterial(item)">🗑️</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+            <component :is="selectedTable"></component>
         </main>
     </div>
 </template>
@@ -71,35 +36,16 @@
 <script>
 import "@/assets/css/homeStyles.css";
 import authService from "@/services/authService.js";
+import ReceivingTable from "@/components/ReceivingTable.vue";
+import WashingTable from "@/components/WashingTable.vue";
+import DistributionTable from "@/components/DistributionTable.vue";
 
 export default {
+    components: { ReceivingTable, WashingTable, DistributionTable },
     data() {
         return {
             isAdmin: false,
-            selectedTable: "receiving",
-            tables: {
-                receiving: {
-                    title: "Receiving",
-                    data: [
-                        { id: 1, material: "Scalpel", user: "John Doe", status: "Pending", date: "2025-01-15" },
-                        { id: 2, material: "Gauze", user: "Jane Smith", status: "Completed", date: "2025-01-14" }
-                    ]
-                },
-                washing: {
-                    title: "Washing",
-                    data: [
-                        { id: 3, material: "Forceps", user: "Alice Brown", status: "In Progress", date: "2025-01-16" },
-                        { id: 4, material: "Gloves", user: "Bob Green", status: "Pending", date: "2025-01-17" }
-                    ]
-                },
-                distribution: {
-                    title: "Distribution",
-                    data: [
-                        { id: 5, material: "Syringe", user: "Emily White", status: "Shipped", date: "2025-01-18" },
-                        { id: 6, material: "Bandage", user: "Tom Blue", status: "Delivered", date: "2025-01-19" }
-                    ]
-                }
-            }
+            selectedTable: "ReceivingTable",
         };
     },
     computed: {

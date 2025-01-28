@@ -7,6 +7,7 @@ public class UserController : ControllerBase
 {
     private readonly MyDbContext _context;
     private readonly IUserService _userService;
+
     public UserController(MyDbContext context, IUserService userService)
     {
         _context = context;
@@ -17,11 +18,10 @@ public class UserController : ControllerBase
     public async Task<IActionResult> Login([FromBody] UserLoginDto request)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
-
         if (user == null)
             return NotFound(new { message = "Usuário não encontrado" });
 
-        if (!BCrypt.Net.BCrypt.Verify(request.Password, user.HashPassword))
+        if (!_userService.VerifyPassword(request.Password, user.HashPassword))
             return BadRequest(new { message = "Senha incorreta" });
 
         var token = _userService.GenerateJwtToken(user);
@@ -34,12 +34,10 @@ public class UserController : ControllerBase
         if (await _context.Users.AnyAsync(u => u.Username == request.Username))
             return BadRequest(new { message = "Username já está em uso!" });
 
-        string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.HashPassword);
-
         var user = new User
         {
             Username = request.Username,
-            HashPassword = passwordHash,
+            HashPassword = _userService.GenerateHashPassword(request.HashPassword),
             Email = request.Email,
             IdGroup = request.IdGroup,
             CriadoEm = DateTime.UtcNow
@@ -62,7 +60,7 @@ public class UserController : ControllerBase
                 u.Username,
                 u.Email,
                 u.CriadoEm,
-                IdGroup = u.IdGroup,
+                u.IdGroup,
                 UserGroup = u.UserGroup.Name
             })
             .ToListAsync();
@@ -74,7 +72,7 @@ public class UserController : ControllerBase
     public async Task<ActionResult<object>> GetUser(int id)
     {
         var user = await _context.Users
-            .Include(u => u.UserGroup) 
+            .Include(u => u.UserGroup)
             .Where(u => u.IdUser == id)
             .Select(u => new
             {
@@ -82,35 +80,26 @@ public class UserController : ControllerBase
                 u.Username,
                 u.Email,
                 u.CriadoEm,
-                IdGroup = u.IdGroup,
+                u.IdGroup,
                 UserGroup = u.UserGroup.Name
             })
             .FirstOrDefaultAsync();
 
         if (user == null)
-        {
-            return NotFound("Usuário não encontrado");
-        }
+            return NotFound(new { message = "Usuário não encontrado" });
 
         return Ok(user);
     }
 
-
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser(int id, [FromBody] UserLoginDto userLoginDto)
+    public async Task<IActionResult> DeleteUser(int id)
     {
-
         var userToDelete = await _context.Users.FindAsync(id);
         if (userToDelete == null)
             return NotFound(new { message = "Usuário não encontrado" });
 
-        var adminUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == userLoginDto.Username);
-
-        if (adminUser == null || !BCrypt.Net.BCrypt.Verify(userLoginDto.Password, adminUser.HashPassword))
-            return Unauthorized(new { message = "Credenciais inválidas" });
-
-        if (adminUser.IdGroup != 1) // 1 = Admin
-            return Forbid();
+        if (await _context.ProcessHistories.AnyAsync(p => p.IdUser == id))
+            return BadRequest(new { message = "Não é possível excluir usuários vinculados a processos." });
 
         _context.Users.Remove(userToDelete);
         await _context.SaveChangesAsync();

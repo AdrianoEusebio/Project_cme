@@ -1,21 +1,20 @@
 <template>
     <div class="home-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <h2>Menu</h2>
             <button @click="handleNavigation('home')" :class="{ active: isActive('home') }">Histórico</button>
-            <button @click="handleNavigation('process')" :class="{ active: isActive('process') }">Process</button>
+            <button @click="handleNavigation('process')" :class="{ active: isActive('process') }">Processos</button>
             <button v-if="isAdmin" @click="handleNavigation('materials')" :class="{ active: isActive('materials') }">
-                Materials</button>
+                Materiais</button>
             <button v-if="isAdmin" @click="handleNavigation('users')" :class="{ active: isActive('users') }">
-                Users</button>
-            <button @click="generatePDF">Generate PDF</button>
+                Usuarios</button>
+            <button @click="generatePDF">Gerar PDF</button>
         </aside>
 
         <main class="content">
             <header>
                 <h1 class="title">CMEBringel - Histórico</h1>
-                <button class="account-button" @click="showUserInfo">👤 Account</button>
+                <button class="account-button" @click="showUserInfo">👤 Conta</button>
             </header>
 
             <section class="process-history">
@@ -32,12 +31,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in processHistory" :key="item.id">
-                                <td>{{ item.id }}</td>
-                                <td>{{ item.material }}</td>
-                                <td>{{ item.user }}</td>
-                                <td class="status">{{ item.status }}</td>
-                                <td>{{ item.date }}</td>
+                            <tr v-for="item in processHistory" :key="item.idProcess">
+                                <td>{{ item.idProcess }}</td>
+                                <td>{{ item.serialMaterial }}</td>
+                                <td>{{ item.idUser }}</td>
+                                <td class="status">{{ item.enumStatus }}</td>
+                                <td>{{ formatDate(item.entryData) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -49,16 +48,14 @@
 
 <script>
 import "@/assets/css/homeStyles.css";
+import axios from "axios";
 import authService from "@/services/authService.js";
 
 export default {
     data() {
         return {
             isAdmin: false,
-            processHistory: [
-                { id: 1, material: "Scalpel", user: "John Doe", status: "Finalizado", date: "2025-01-15" },
-                { id: 2, material: "Gauze", user: "Jane Smith", status: "Pendente", date: "2025-01-14" }
-            ]
+            processHistory: []
         };
     },
     methods: {
@@ -78,14 +75,28 @@ export default {
         async showUserInfo() {
             await authService.getUserCredentials();
         },
-
+        async fetchProcessHistory() {
+            try {
+                const response = await axios.get("http://localhost:8000/api/processHistory");
+                this.processHistory = response.data;
+            } catch (error) {
+                console.error("Erro ao buscar histórico de processos:", error);
+            }
+        },
+        formatDate(date) {
+            return date ? new Date(date).toLocaleDateString("pt-BR") : "-";
+        },
+        formatValue(value) {
+            return value === 0 || value === null || value === undefined ? "-" : value;
+        },
         checkAdminAccess() {
             const role = localStorage.getItem("role");
-            this.isAdmin = role === "1"; 
+            this.isAdmin = role === "1";
         }
     },
     mounted() {
         this.checkAdminAccess();
+        this.fetchProcessHistory();
         window.addEventListener("roleUpdated", this.checkAdminAccess);
     },
     beforeUnmount() {
@@ -99,42 +110,5 @@ export default {
     background: #1abc9c;
     color: white;
     font-weight: bold;
-}
-
-/* Estilização da Tabela */
-.table-wrapper {
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-th {
-    background: #2c3e50;
-    color: white;
-    padding: 12px;
-    text-align: left;
-}
-
-td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-}
-
-tbody tr:nth-child(even) {
-    background: #f9f9f9;
-}
-
-tbody tr:hover {
-    background: #ecf0f1;
-}
-
-.status {
-    font-weight: bold;
-    color: #27ae60;
 }
 </style>

@@ -14,14 +14,12 @@ export default {
 
       const { token, username: user, email, idGroup, idUser } = response.data;
       localStorage.setItem("token", token);
-      localStorage.setItem("userId", idUser)
+      localStorage.setItem("id", idUser)
       localStorage.setItem("username", user);
       localStorage.setItem("email", email);
       localStorage.setItem("role", idGroup);
 
       window.dispatchEvent(new Event("roleUpdated"))
-
-      this.getUserCredentials();
 
       return response.data;
     } catch (error) {
@@ -32,7 +30,7 @@ export default {
   async getUserCredentials() {
     try {
       const token = localStorage.getItem("token");
-      const userId = localStorage.getItem("userId");
+      const userId = localStorage.getItem("id");
 
       if (!token || !userId) {
         alert("Usuário não está logado.");

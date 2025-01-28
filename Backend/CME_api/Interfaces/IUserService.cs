@@ -1,5 +1,6 @@
 public interface IUserService
 {
-    Task<User?> Authenticate(string username, string password);
+    string GenerateHashPassword(string password);
+    bool VerifyPassword(string password, string hashedPassword);
     string GenerateJwtToken(User user);
 }

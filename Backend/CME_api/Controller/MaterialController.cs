@@ -1,83 +1,50 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 [ApiController]
 [Route("api/[controller]")]
 public class MaterialController : ControllerBase
 {
-    private readonly MyDbContext _context;
+    private readonly IMaterialService _materialService;
 
-    public MaterialController(MyDbContext context)
+    public MaterialController(IMaterialService materialService)
     {
-        _context = context;
+        _materialService = materialService;
     }
 
     [HttpPost("register")]
-    public async Task<ActionResult<Material>> CreateMaterial(MaterialDto materialDto)
+    public async Task<ActionResult<MaterialDto>> CreateMaterial(MaterialDto materialDto)
     {
-        var material = new Material
-        {
-            IdUser = materialDto.IdUser,
-            ExpirationDate = materialDto.ExpirationDate,
-            Type = materialDto.Type,
-            Name = materialDto.Name 
-        };
-
-        _context.Materials.Add(material);
-        await _context.SaveChangesAsync();
-
-        material.GenerateSerial();
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetMaterialById), new { id = material.IdMaterial }, material);
+        var material = await _materialService.CreateMaterial(materialDto);
+        return CreatedAtAction(nameof(GetMaterialById), new { id = material.IdUser }, material);
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Material>>> GetAllMaterials()
+    public async Task<ActionResult<IEnumerable<MaterialDto>>> GetAllMaterials()
     {
-        return await _context.Materials.ToListAsync();
+        var materials = await _materialService.GetAllMaterials();
+        return Ok(materials);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Material>> GetMaterialById(int id)
+    public async Task<ActionResult<MaterialDto>> GetMaterialById(int id)
     {
-        var material = await _context.Materials.FindAsync(id);
+        var material = await _materialService.GetMaterialById(id);
         if (material == null)
-        {
-            return NotFound();
-        }
-        return material;
+            return NotFound(new { message = "Material não encontrado." });
+
+        return Ok(material);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteMaterial(int id)
     {
-        var material = await _context.Materials.FirstOrDefaultAsync(m => m.IdMaterial == id);
+        var result = await _materialService.DeleteMaterial(id);
+        if (result == null)
+            return NotFound(new { message = "Material não encontrado." });
 
-        if (material == null)
-        {
-            return NotFound("Material Não encontrado");
-        }
+        if (!result.Value)
+            return BadRequest(new { message = "Material não pode ser excluído porque está em uso no processo." });
 
-        var processHistory = await _context.ProcessHistories
-        .Where(p => p.SerialMaterial == material.Serial)
-        .OrderByDescending(p => p.EntryData)
-        .FirstOrDefaultAsync();
-
-        if (processHistory != null)
-        {
-
-            processHistory.EnumStatus = MaterialStatus.DESCARTADO.ToString();
-            _context.ProcessHistories.Update(processHistory);
-            await _context.SaveChangesAsync();
-        } else
-        {
-            return NotFound("Histórico de Processo não encontrado");
-        }
-
-        _context.Materials.Remove(material);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
+        return Ok(new { message = "Material excluído com sucesso!" });
     }
 }
