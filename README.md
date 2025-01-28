@@ -42,6 +42,8 @@ O status do material mudará para LAVAGEM FINALIZADA.
 Antes de rodar o projeto, instale:
 
 🔹 Docker
+
+
 🔹 Docker Compose
 
 ## Configuração do Ambiente
