@@ -190,6 +190,7 @@ export default {
                     idUser: Number(idUser)
                 });
                 alert("Lavagem iniciada com sucesso!");
+                location.reload();
                 this.fetchWashingData();
                 this.closeWashingModal();
             } catch (error) {
