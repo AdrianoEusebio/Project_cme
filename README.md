@@ -133,9 +133,13 @@ networks:
 ## Telas do Frontend
 
 HomePage: Tela principal onde mostrará a tabela de historico.
+
 LoginPage: Tela onde efetuamos o Login.
+
 MaterialsPage: Tela onde mostrará a tabela e onde efetuamos o CRUD de Materiais.
+
 ProcessPage: Tela onde efetuaremos os processos(Receiving,Washing e Distribution).
+
 UsersPage: Tela onde mostrará a tabela e onde efetuamos o CRUD de Usuarios.
 
 ## Contato
