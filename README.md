@@ -63,6 +63,8 @@ Siga os passos abaixo para configurar e utilizar o sistema.
     - Usuário: `superadmin`
     - Senha: `admin123`
 
+##Configuração do Swagger
+
 
 ## Telas do Frontend
 
