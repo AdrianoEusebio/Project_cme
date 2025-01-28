@@ -4,6 +4,7 @@ Projeto de uma API RESTful desenvolvida em C# com ASP.NET Core para autenticaç�
 
 ## 🏗️ Definição das Regras e Funcionalidades
 
+
 🔹 Autenticação
 
 ```bash
